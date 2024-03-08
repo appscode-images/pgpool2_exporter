@@ -2,6 +2,9 @@ FROM alpine:3
 
 LABEL maintainer="AppsCode <support@appscode.com>"
 
+ARG TARGETOS
+ARG TARGETARCH
+
 ENV POSTGRES_USERNAME postgres
 ENV POSTGRES_PASSWORD postgres
 ENV POSTGRES_DATABASE postgres
@@ -16,7 +19,7 @@ RUN set -ex; \
     mkdir -p /var/lib/pgsql; \
     chown -R postgres:postgres /var/lib/pgsql
 
-COPY pgpool2_exporter /bin/pgpool2_exporter
+COPY .build/${TARGETOS}-${TARGETARCH}/pgpool2_exporter /bin/pgpool2_exporter
 
 CMD ["/bin/sh", "-c", "export DATA_SOURCE_USER=\"${POSTGRES_USERNAME}\" ; export DATA_SOURCE_PASS=\"${POSTGRES_PASSWORD}\" ; export DATA_SOURCE_URI=\"${PGPOOL_SERVICE}:${PGPOOL_SERVICE_PORT}/${POSTGRES_DATABASE}?sslmode=${SSLMODE}\" ; /bin/pgpool2_exporter"]
 
